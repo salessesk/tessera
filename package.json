@@ -23,6 +23,7 @@
     "debug": "^3.2.6",
     "express": "^4.16.4",
     "handlebars": "^4.0.12",
+    "https": "^1.0.0",
     "morgan": "^1.9.1",
     "nomnom": "^1.8.1",
     "response-time": "^2.2.0",

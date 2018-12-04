@@ -11,6 +11,7 @@ var cors = require("cors"),
     debug = require("debug"),
     express = require("express"),
     morgan = require("morgan"),
+    https = require("https"),
     responseTime = require("response-time");
 
 var serve = require("./lib/app"),
