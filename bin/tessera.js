@@ -62,6 +62,18 @@ var nomnom = require("nomnom")
       metavar: "SOCKET",
       help: "Listen on unix socket"
     },
+    sslKey: {
+      full: "ssl-key",
+      help: "Set this option and sslCert if you want to use SSL server",
+      metavar: "SSLKEY",
+      default: false
+    },
+    sslCert: {
+      full: "ssl-cert",
+      help: "Set this option and sslKey if you want to use SSL server",
+      metavar: "SSLCERT",
+      default: false
+    },
     version: {
       abbr: "v",
       flag: true,

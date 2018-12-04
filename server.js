@@ -128,7 +128,8 @@ module.exports = function(opts, callback) {
   }
 
   var handler = process.env.SOCKET || opts.socket || process.env.PORT || opts.port;
-  var server = app.listen(handler, process.env.HOST || opts.bind, function() {
+  var isHttps = opts.sslKey !== false && opts.sslCert !== false;
+  var serverCallback = function() {
     var endpoint;
     if (opts.socket) {
       endpoint = opts.socket;
@@ -141,12 +142,27 @@ module.exports = function(opts, callback) {
       // allow the socket to be accessed by other users/groups
       fs.chmodSync(opts.socket, "1766");
     } else {
-      endpoint = "http://" + this.address().address + ':' + this.address().port;
+      endpoint = (isHttps ? "https" : "http") + "://" + this.address().address + ':' + this.address().port;
     }
     console.log("Listening at %s", endpoint);
 
     return callback();
-  });
+  }
+
+  var listen;
+  if (isHttps) {
+    listen = function() {
+      var httpsServer = https.createServer({
+        cert: fs.readFileSync(opts.sslCert),
+        key: fs.readFileSync(opts.sslKey)
+      }, app);
+      return httpsServer.listen.apply(httpsServer, arguments);
+    }
+  } else {
+    listen = app.listen.bind(app);
+  }
+
+  var server = listen(handler, process.env.HOST || opts.bind, serverCallback);
 
   process.on('SIGINT', function () {
     console.warn('Caught SIGINT, terminating');
